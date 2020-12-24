@@ -6,36 +6,37 @@ part of 'posts.dart';
 // BuiltValueGenerator
 // **************************************************************************
 
-Serializer<Posts> _$postsSerializer = new _$PostsSerializer();
+Serializer<BuiltPost> _$builtPostSerializer = new _$BuiltPostSerializer();
 
-class _$PostsSerializer implements StructuredSerializer<Posts> {
+class _$BuiltPostSerializer implements StructuredSerializer<BuiltPost> {
   @override
-  final Iterable<Type> types = const [Posts, _$Posts];
+  final Iterable<Type> types = const [BuiltPost, _$BuiltPost];
   @override
-  final String wireName = 'Posts';
+  final String wireName = 'BuiltPost';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, Posts object,
+  Iterable<Object> serialize(Serializers serializers, BuiltPost object,
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
-      'userId',
-      serializers.serialize(object.userId, specifiedType: const FullType(int)),
-      'id',
-      serializers.serialize(object.id, specifiedType: const FullType(int)),
       'title',
       serializers.serialize(object.title,
           specifiedType: const FullType(String)),
       'body',
       serializers.serialize(object.body, specifiedType: const FullType(String)),
     ];
-
+    if (object.id != null) {
+      result
+        ..add('id')
+        ..add(serializers.serialize(object.id,
+            specifiedType: const FullType(int)));
+    }
     return result;
   }
 
   @override
-  Posts deserialize(Serializers serializers, Iterable<Object> serialized,
+  BuiltPost deserialize(Serializers serializers, Iterable<Object> serialized,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = new PostsBuilder();
+    final result = new BuiltPostBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
@@ -43,10 +44,6 @@ class _$PostsSerializer implements StructuredSerializer<Posts> {
       iterator.moveNext();
       final dynamic value = iterator.current;
       switch (key) {
-        case 'userId':
-          result.userId = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
-          break;
         case 'id':
           result.id = serializers.deserialize(value,
               specifiedType: const FullType(int)) as int;
@@ -66,9 +63,7 @@ class _$PostsSerializer implements StructuredSerializer<Posts> {
   }
 }
 
-class _$Posts extends Posts {
-  @override
-  final int userId;
+class _$BuiltPost extends BuiltPost {
   @override
   final int id;
   @override
@@ -76,36 +71,29 @@ class _$Posts extends Posts {
   @override
   final String body;
 
-  factory _$Posts([void Function(PostsBuilder) updates]) =>
-      (new PostsBuilder()..update(updates)).build();
+  factory _$BuiltPost([void Function(BuiltPostBuilder) updates]) =>
+      (new BuiltPostBuilder()..update(updates)).build();
 
-  _$Posts._({this.userId, this.id, this.title, this.body}) : super._() {
-    if (userId == null) {
-      throw new BuiltValueNullFieldError('Posts', 'userId');
-    }
-    if (id == null) {
-      throw new BuiltValueNullFieldError('Posts', 'id');
-    }
+  _$BuiltPost._({this.id, this.title, this.body}) : super._() {
     if (title == null) {
-      throw new BuiltValueNullFieldError('Posts', 'title');
+      throw new BuiltValueNullFieldError('BuiltPost', 'title');
     }
     if (body == null) {
-      throw new BuiltValueNullFieldError('Posts', 'body');
+      throw new BuiltValueNullFieldError('BuiltPost', 'body');
     }
   }
 
   @override
-  Posts rebuild(void Function(PostsBuilder) updates) =>
+  BuiltPost rebuild(void Function(BuiltPostBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  PostsBuilder toBuilder() => new PostsBuilder()..replace(this);
+  BuiltPostBuilder toBuilder() => new BuiltPostBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is Posts &&
-        userId == other.userId &&
+    return other is BuiltPost &&
         id == other.id &&
         title == other.title &&
         body == other.body;
@@ -113,15 +101,12 @@ class _$Posts extends Posts {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc($jc($jc(0, userId.hashCode), id.hashCode), title.hashCode),
-        body.hashCode));
+    return $jf($jc($jc($jc(0, id.hashCode), title.hashCode), body.hashCode));
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('Posts')
-          ..add('userId', userId)
+    return (newBuiltValueToStringHelper('BuiltPost')
           ..add('id', id)
           ..add('title', title)
           ..add('body', body))
@@ -129,12 +114,8 @@ class _$Posts extends Posts {
   }
 }
 
-class PostsBuilder implements Builder<Posts, PostsBuilder> {
-  _$Posts _$v;
-
-  int _userId;
-  int get userId => _$this._userId;
-  set userId(int userId) => _$this._userId = userId;
+class BuiltPostBuilder implements Builder<BuiltPost, BuiltPostBuilder> {
+  _$BuiltPost _$v;
 
   int _id;
   int get id => _$this._id;
@@ -148,11 +129,10 @@ class PostsBuilder implements Builder<Posts, PostsBuilder> {
   String get body => _$this._body;
   set body(String body) => _$this._body = body;
 
-  PostsBuilder();
+  BuiltPostBuilder();
 
-  PostsBuilder get _$this {
+  BuiltPostBuilder get _$this {
     if (_$v != null) {
-      _userId = _$v.userId;
       _id = _$v.id;
       _title = _$v.title;
       _body = _$v.body;
@@ -162,22 +142,21 @@ class PostsBuilder implements Builder<Posts, PostsBuilder> {
   }
 
   @override
-  void replace(Posts other) {
+  void replace(BuiltPost other) {
     if (other == null) {
       throw new ArgumentError.notNull('other');
     }
-    _$v = other as _$Posts;
+    _$v = other as _$BuiltPost;
   }
 
   @override
-  void update(void Function(PostsBuilder) updates) {
+  void update(void Function(BuiltPostBuilder) updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$Posts build() {
-    final _$result =
-        _$v ?? new _$Posts._(userId: userId, id: id, title: title, body: body);
+  _$BuiltPost build() {
+    final _$result = _$v ?? new _$BuiltPost._(id: id, title: title, body: body);
     replace(_$result);
     return _$result;
   }

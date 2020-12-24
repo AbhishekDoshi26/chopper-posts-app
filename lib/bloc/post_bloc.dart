@@ -1,27 +1,41 @@
-import 'dart:async';
-
-import 'package:bloc/bloc.dart';
-import 'package:built_collection/built_collection.dart';
-import 'package:chopper/chopper.dart';
 import 'package:chopper_app_complete/model/posts.dart';
 import 'package:chopper_app_complete/service/api_service.dart';
-import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'post_event.dart';
+import 'post_state.dart';
 
-part 'post_event.dart';
-part 'post_state.dart';
+class DemolistBloc extends Bloc<DemolistEvent, DemolistState> {
+  List<BuiltPost> _postList;
 
-class PostBloc extends Bloc<PostEvent, PostState> {
-  PostBloc() : super(PostInitialState());
+  DemolistBloc() : super(DemolistInitial());
 
   @override
-  Stream<PostState> mapEventToState(PostEvent event) async* {
-    if (event is Fetch) {
-      yield PostLoadingState();
-      print('Data Loading');
-      final Response<BuiltList<Posts>> response =
-          await ApiService.create().getPosts();
-      print('Data Fetched');
-      yield PostLoadedState(post: response);
+  Stream<DemolistState> mapEventToState(DemolistEvent event) async* {
+    if (event is GetFilteredDemoList) {
+      yield DemoListLoading();
+      final string = event.val;
+      //final string = 'qui est esse';
+      print('string $string');
+
+      final filteredposts = _postList
+          .where((u) => (u.title.toLowerCase().contains(string.toLowerCase()) ||
+              u.body.toLowerCase().contains(string.toLowerCase())))
+          .toList();
+      print('filtered');
+      print(filteredposts.length);
+      // yield DemoListLoaded(postlists: filteredposts);
+      yield Demolistfiltered(filteredposts: filteredposts);
+    }
+    if (event is GetDemoList) {
+      yield DemoListLoading();
+
+      try {
+        final response = await PostApiService.create().getPosts();
+        _postList = response.body.toList();
+        yield DemoListLoaded(postlists: _postList);
+      } catch (_) {
+        yield ErrorListSate();
+      }
     }
   }
 }

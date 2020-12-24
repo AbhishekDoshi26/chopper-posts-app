@@ -1,18 +1,27 @@
-part of 'post_bloc.dart';
+import 'package:chopper_app_complete/model/posts.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
-abstract class PostState extends Equatable {
-  const PostState();
-
+abstract class DemolistState extends Equatable {
+  const DemolistState();
   @override
   List<Object> get props => [];
 }
 
-class PostInitialState extends PostState {}
+class DemolistInitial extends DemolistState {}
 
-class PostLoadingState extends PostState {}
+class DemoListLoading extends DemolistState {}
 
-class PostLoadedState extends PostState {
-  final Response<BuiltList<Posts>> post;
+class Demolistfiltered extends DemolistState {
+  final List<BuiltPost> filteredposts;
 
-  PostLoadedState({this.post});
+  Demolistfiltered({@required this.filteredposts});
 }
+
+class DemoListLoaded extends DemolistState {
+  final List<BuiltPost> postlists;
+
+  DemoListLoaded({@required this.postlists});
+}
+
+class ErrorListSate extends DemolistState {}
