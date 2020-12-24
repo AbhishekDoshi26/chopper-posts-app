@@ -11,6 +11,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   PostBloc postBloc;
+  bool isGrid = false;
   @override
   void initState() {
     postBloc = BlocProvider.of(context);
@@ -32,6 +33,16 @@ class _HomeState extends State<Home> {
             fontSize: 25.0,
           ),
         ),
+        actions: [
+          Switch(
+              value: isGrid,
+              onChanged: (value) {
+                setState(() {
+                  isGrid = value;
+                  print(isGrid);
+                });
+              })
+        ],
       ),
       body: BlocBuilder<PostBloc, PostState>(
         builder: (context, state) {
@@ -42,6 +53,7 @@ class _HomeState extends State<Home> {
           if (state is PostLoadedState)
             return PostsData(
               state: state,
+              isGrid: isGrid,
             );
           return Container();
         },
